@@ -2,10 +2,16 @@
 
 An Ansible Role that installs [Flare VM](https://github.com/mandiant/flare-vm) on Windows >= 10 hosts.
 
+Uses code from [privacy.sexy](https://privacy.sexy) to disable Defender and Tamper Protection.
+
 ## Requirements
 
-Windows defender should be disabled in Safe Mode see [this guide](https://lazyadmin.nl/win-11/turn-off-windows-defender-windows-11-permanently/) or [this video](https://www.youtube.com/watch?v=81l__vvGnjA).
-While this role attempts to disable Defender, it can only do so much without booting into safe mode.
+- Windows >= 10
+- Powershell >= 5
+- at least 60GB free disk
+- at least 2GB RAM
+- Usernames without spaces or other special characters
+- Internet connection
 
 ## Role Variables
 
