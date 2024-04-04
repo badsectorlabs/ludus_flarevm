@@ -1,0 +1,89 @@
+# From: https://github.com/ccdc-opensource/ansible-role-debloat-windows/tree/main
+# MIT License
+
+# Copyright (c) 2022 The Cambridge Crystallographic Data Centre (Open Source)
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
+- name: Disable Windows Defender scheduled tasks
+  community.windows.win_scheduled_task:
+    name: "{{ task_name }}"
+    path: \Microsoft\Windows\Windows Defender
+    enabled: false
+  loop:
+    - Windows Defender Cache Maintenance
+    - Windows Defender Cleanup
+    - Windows Defender Scheduled Scan
+    - Windows Defender Verification
+  loop_control:
+    loop_var: task_name
+
+- name: Disable Windows Defender via group policy
+  ansible.windows.win_regedit:
+    path: "{{ option.path }}"
+    name: "{{ option.key }}"
+    data: "{{ option.value }}"
+    type: dword
+  loop_control:
+    loop_var: option
+  loop:
+    - path: HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender
+      key: DisableAntiSpyware
+      value: 1
+    - path: HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender
+      key: DisableRoutinelyTakingAction
+      value: 1
+    - path: HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection
+      key: DisableRealtimeMonitoring
+      value: 1
+    # - path: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\WdNisSvc"
+    #   key: Start
+    #   value: 4
+    # - path: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\WdNisSvc"
+    #   key: AutorunsDisabled
+    #   value: 3
+    # - path: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\WinDefend"
+    #   key: Start
+    #   value: 4
+    # - path: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\WinDefend"
+    #   key: AutorunsDisabled
+    #   value: 3
+    - path: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Sense"
+      key: Start
+      value: 4
+    - path: "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Sense"
+      key: AutorunsDisabled
+      value: 3
+
+- name: Disable Windows Defender shell integration
+  ansible.windows.win_regedit:
+    path: "{{ option.path }}"
+    name: "{{ option.key }}"
+    state: absent
+    delete_key: "{{ option.delete_key }}"
+  loop_control:
+    loop_var: option
+  loop:
+    - path: HKLM:\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32
+      key: ""
+      delete_key: false
+    - path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+      key: "WindowsDefender"
+      delete_key: true

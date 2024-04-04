@@ -1,0 +1,12 @@
+ludus:
+  - vm_name: "{{ range_id }}-flare"
+    hostname: "{{ range_id }}-FLARE"
+    template: win11-22h2-x64-enterprise-template
+    vlan: 99
+    ip_last_octet: 2
+    ram_gb: 8
+    cpus: 4
+    windows:
+      install_additional_tools: false
+    roles:
+      - ludus_flarevm
