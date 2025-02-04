@@ -144,7 +144,7 @@
     ludus_download_file_host_path: "C:\\ludus\\flarevm"
 
 - name: Run the Flare installer script
-  ansible.windows.win_shell: ".\\install.ps1 -noPassword -noWait -noGui -noChecks"
+  ansible.windows.win_shell: ".\\install.ps1 -noPassword -noWait -noGui -noChecks -customConfig {{ ludus_flarevm_config_file }} "
   args:
     chdir: "C:\\ludus\\flarevm"
   async: 100
