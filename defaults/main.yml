@@ -1,3 +1,3 @@
 ---
 ludus_flarevm_use_flarevm_wallpaper: true
-ludus_flarevm_config_file: "https://github.com/mandiant/flare-vm/blob/main/config.xml"
+ludus_flarevm_config_file: "https://raw.githubusercontent.com/mandiant/flare-vm/refs/heads/main/config.xml"
