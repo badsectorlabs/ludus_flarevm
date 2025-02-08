@@ -18,6 +18,9 @@ Uses code from [privacy.sexy](https://privacy.sexy) to disable Defender and Tamp
     # Disable the red/green dynamic Ludus wallpaper in favor of the static flarevm wallpaper
     ludus_flarevm_use_flarevm_wallpaper: true
 
+    # Specify custom config.xml file.  Defaults to config.xml provided by Mandiant.
+    ludus_flarevm_config_file: "https://raw.githubusercontent.com/mandiant/flare-vm/refs/heads/main/config.xml"
+
 ## Dependencies
 
 None.
